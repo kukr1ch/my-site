@@ -1,18 +1,693 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой сайт</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоХаб - Смотри. Выбирай. Покупай.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        /* Шапка */
+        .header {
+            background-color: #000000;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #ff9900;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            background-color: #ff9900;
+            color: #000;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            color: #ff9900;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+            display: flex;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            background-color: #2b2b2b;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            background-color: #ff9900;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-orange {
+            background-color: #ff9900;
+            color: #000;
+        }
+
+        .btn-orange:hover {
+            background-color: #e68a00;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #ff9900;
+            border: 2px solid #ff9900;
+        }
+
+        .btn-outline:hover {
+            background-color: #ff9900;
+            color: #000;
+        }
+
+        /* Навигация */
+        .nav {
+            background-color: #111;
+            padding: 10px 20px;
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-item {
+            padding: 8px 18px;
+            background-color: #222;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: #ff9900;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Основной контент */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Сетка видео */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover .thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: #ff9900;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .video-info {
+            padding: 12px;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .video-author {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .author-avatar {
+            width: 20px;
+            height: 20px;
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            background-color: #ff9900;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-new {
+            background-color: #ff3366;
+            color: #fff;
+        }
+
+        /* Баннер */
+        .banner {
+            background: linear-gradient(135deg, #ff9900 0%, #ff6600 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000;
+        }
+
+        .banner-content h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .banner-content p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .banner-btn {
+            padding: 15px 40px;
+            background-color: #000;
+            color: #ff9900;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .banner-btn:hover {
+            background-color: #222;
+            transform: scale(1.05);
+        }
+
+        /* Категории */
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #ff9900;
+        }
+
+        /* Футер */
+        .footer {
+            background-color: #000;
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 50px;
+            border-top: 2px solid #ff9900;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ff9900;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                margin: 10px 0 0 0;
+                flex-basis: 100%;
+            }
+            .banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 30px 20px;
+            }
+            .banner-content h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Привет, мир!</h1>
-  </header>
-  <main>
-    <p>Это мой сайт на GitHub Pages.</p>
-  </main>
-  <script src="script.js"></script>
+
+    <!-- Шапка -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">AX</div>
+            <div class="logo-text">Авто<span>Хаб</span></div>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск автомобилей, обзоров, тюнинга...">
+            <button>🔍</button>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline">Войти</button>
+            <button class="btn btn-orange">Загрузить</button>
+        </div>
+    </header>
+
+    <!-- Навигация -->
+    <nav class="nav">
+        <div class="nav-item active">Все</div>
+        <div class="nav-item">Обзоры</div>
+        <div class="nav-item">Тюнинг</div>
+        <div class="nav-item">Дрифт</div>
+        <div class="nav-item">Ретро</div>
+        <div class="nav-item">Электро</div>
+        <div class="nav-item">Внедорожники</div>
+        <div class="nav-item">Спорткары</div>
+        <div class="nav-item">Тюнинг-шоу</div>
+        <div class="nav-item">Покупка</div>
+        <div class="nav-item">Тест-драйв</div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="main">
+        
+        <!-- Баннер -->
+        <div class="banner">
+            <div class="banner-content">
+                <h1>🔥 Горячие тачки недели</h1>
+                <p>Смотри обзоры, выбирай лучший автомобиль и покупай выгодно!</p>
+            </div>
+            <button class="banner-btn">Смотреть подборку</button>
+        </div>
+
+        <!-- Популярное -->
+        <h2 class="section-title">Популярное на АвтоХаб</h2>
+        <div class="video-grid">
+            
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=250&fit=crop" alt="BMW M5">
+                    <span class="price-tag">$85 000</span>
+                    <span class="duration">18:42</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">BMW M5 Competition 2024 — Полный обзор и тест-драйв</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">А</div>
+                            <span>AutoShow</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 1.2M</span>
+                            <span class="badge">TOP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=250&fit=crop" alt="Mercedes AMG">
+                    <span class="price-tag">$120 000</span>
+                    <span class="duration">25:15</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Mercedes-AMG GT 63 S — Зверь на колёсах. Обзор 4.0 V8</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">М</div>
+                            <span>MotorDrive</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 890K</span>
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=250&fit=crop" alt="Corvette">
+                    <span class="price-tag">$95 000</span>
+                    <span class="duration">12:33</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Chevrolet Corvette C8 — Американская легенда в деле</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">В</div>
+                            <span>V8Power</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 2.1M</span>
+                            <span class="badge">HOT</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=250&fit=crop" alt="Audi RS6">
+                    <span class="price-tag">$110 000</span>
+                    <span class="duration">22:08</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Audi RS6 Avant — Семейный универсал с характером суперкара</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Г</div>
+                            <span>GermanCars</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 750K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&h=250&fit=crop" alt="Tesla Model S">
+                    <span class="price-tag">$89 000</span>
+                    <span class="duration">15:47</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Tesla Model S Plaid — 1020 лошадей электро-безумия</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Э</div>
+                            <span>ElectroDrive</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 3.4M</span>
+                            <span class="badge">TOP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=400&h=250&fit=crop" alt="Porsche 911">
+                    <span class="price-tag">$150 000</span>
+                    <span class="duration">30:22</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Porsche 911 Turbo S — Эталон скорости и управляемости</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">П</div>
+                            <span>PorscheClub</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 1.8M</span>
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&h=250&fit=crop" alt="Lamborghini">
+                    <span class="price-tag">$230 000</span>
+                    <span class="duration">19:55</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Lamborghini Huracán — Итальянский бык на треке</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Л</div>
+                            <span>SuperCarBlog</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 5.6M</span>
+                            <span class="badge">HOT</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&h=250&fit=crop" alt="Ford Mustang">
+                    <span class="price-tag">$65 000</span>
+                    <span class="duration">14:20</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Ford Mustang GT 5.0 — Американская мечта с V8 под капотом</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Ф</div>
+                            <span>MustangLife</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 980K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Новинки -->
+        <h2 class="section-title" style="margin-top: 40px;">Новинки автопрома</h2>
+        <div class="video-grid">
+            
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400&h=250&fit=crop" alt="BMW i7">
+                    <span class="price-tag">$105 000</span>
+                    <span class="duration">21:10</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">BMW i7 — Роскошный электро-седан будущего</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Б</div>
+                            <span>BMWBlog</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 450K</span>
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=250&fit=crop" alt="Mercedes EQS">
+                    <span class="price-tag">$115 000</span>
+                    <span class="duration">16:45</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Mercedes EQS — Электрический S-класс с запасом 700 км</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">М</div>
+                            <span>MotorDrive</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 320K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&h=250&fit=crop" alt="Range Rover">
+                    <span class="price-tag">$140 000</span>
+                    <span class="duration">28:30</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Range Rover 2024 — Люкс внедорожник нового поколения</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Р</div>
+                            <span>LuxuryCars</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 670K</span>
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&h=250&fit=crop" alt="BMW X5">
+                    <span class="price-tag">$75 000</span>
+                    <span class="duration">17:22</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">BMW X5 2024 — Рестайлинг легендарного кроссовера</div>
+                    <div class="video-meta">
+                        <div class="video-author">
+                            <div class="author-avatar">Б</div>
+                            <span>BMWBlog</span>
+                        </div>
+                        <div class="video-stats">
+                            <span>👁 540K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">О проекте</a>
+            <a href="#">Контакты</a>
+            <a href="#">Реклама</a>
+            <a href="#">Правила</a>
+            <a href="#">Помощь</a>
+        </div>
+        <p>© 2024 АвтоХаб — Смотри. Выбирай. Покупай.</p>
+        <p style="font-size: 12px; margin-top: 10px;">Все автомобили мечты ждут тебя здесь 🏎️</p>
+    </footer>
+
 </body>
 </html>
